@@ -1,0 +1,7 @@
+<library path="lib/liblsd_slam_to_pcl_nodelet">
+  <class name="LSDSLAMToPCLNodelet" type="LSDSLAMToPCLNodelet" base_class_type="nodelet::Nodelet">
+    <description> 
+      A node to convert lsd_slam depth keyframes to pcl PointClouds
+    </description>
+  </class>
+</library>
