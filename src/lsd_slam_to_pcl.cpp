@@ -6,6 +6,10 @@
 #include <pcl_msgs/PointIndices.h>
 #include <pcl_ros/pcl_nodelet.h>
 
+#include <ros/macros.h>
+
+
+
 LSDSLAMToPCL::LSDSLAMToPCL(ros::NodeHandle& nh, std::string& name) :
     nh_(nh),
     node_name_(name),
@@ -13,9 +17,15 @@ LSDSLAMToPCL::LSDSLAMToPCL(ros::NodeHandle& nh, std::string& name) :
     min_near_support_(5),
     scaled_depth_var_thresh_(1),
     abs_depth_var_thresh_(1)
-{}
+{
 
-LSDSLAMToPCL::~LSDSLAMToPCL() {}
+
+}
+
+LSDSLAMToPCL::~LSDSLAMToPCL() {
+
+
+}
 
 bool LSDSLAMToPCL::Init()
 {
@@ -143,17 +153,20 @@ void LSDSLAMToPCL::depthCB(const lsd_slam_to_pcl::keyframeMsgConstPtr msg)
             }
         }
 
-        uint64_t time_stamp = ros::Time::now().toNSec();
-
         cloud_pcl.width = width;
         cloud_pcl.height = height;
         cloud_pcl.is_dense = false;
-        indices_ros.header.stamp = pcl_conversions::fromPCL(time_stamp);
+        cloud_pcl.header.frame_id = "frame";
+        pcl_conversions::toPCL(ros::Time::now(), cloud_pcl.header.stamp);
+        indices_ros.header.stamp = ros::Time::now();
+
 
         cloud_publisher_.publish(boost::make_shared<const pcl::PointCloud<pcl::PointXYZRGB> >(cloud_pcl));
         indices_publisher_.publish(boost::make_shared<const pcl_ros::PCLNodelet::PointIndices>(indices_ros));
 
         ROS_DEBUG_STREAM("Published " << num_pts_total << " points to pointcloud, dimensions [" << cloud_pcl.width << " " << cloud_pcl.height << "]");
+
+
 
     }
 
